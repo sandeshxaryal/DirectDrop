@@ -1,0 +1,20 @@
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+
+# .NET build output
+bin/
+obj/
+
+# Build artifacts
+Debug/
+Release/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

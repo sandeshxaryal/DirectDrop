@@ -1,0 +1,388 @@
+<Window x:Class="DirectDrop.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DirectDrop"
+        Width="820" Height="820" MinWidth="720" MinHeight="680"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource BackgroundBrush}"
+        FontFamily="Segoe UI" AllowDrop="True" Drop="Window_Drop" DragOver="Window_DragOver">
+    <Grid x:Name="RootLayout">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Quiet macOS-style app chrome. The actual Windows title bar remains native. -->
+        <Border Grid.Row="0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,17">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="40" Height="40" CornerRadius="12" Background="#15171B" BorderBrush="#2D3036" BorderThickness="1" Margin="0,0,12,0" Padding="5">
+                        <Image Source="/DirectDrop;component/Assets/DirectDrop.png" Stretch="Uniform"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="DirectDrop" FontSize="17" FontWeight="SemiBold"/>
+                        <TextBlock Text="Private local file transfer" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button x:Name="HelpButton" Grid.Column="1" Content="&#xE897;" FontFamily="Segoe MDL2 Assets" FontSize="16" Style="{StaticResource IconButton}" ToolTip="Help" Click="HelpButton_Click"/>
+                <Button x:Name="SettingsButton" Grid.Column="2" Content="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" Style="{StaticResource IconButton}" ToolTip="Settings" Click="SettingsButton_Click"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Margin="30,26,30,30">
+            <!-- PAGE 1: initialization -->
+            <Grid x:Name="StartupPanel">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Border Width="82" Height="82" CornerRadius="23" Background="#15171B" BorderBrush="#30333A" BorderThickness="1" Padding="10" Margin="0,0,0,24" HorizontalAlignment="Center">
+                        <Image Source="/DirectDrop;component/Assets/DirectDrop.png" Stretch="Uniform"/>
+                    </Border>
+                    <Ellipse x:Name="StartupSpinner"
+                             Width="24" Height="24"
+                             Stroke="{StaticResource AccentBrush}"
+                             StrokeThickness="3"
+                             StrokeDashArray="1.7 4.3"
+                             StrokeStartLineCap="Round"
+                             StrokeEndLineCap="Round"
+                             RenderTransformOrigin="0.5,0.5"
+                             HorizontalAlignment="Center"
+                             Margin="0,0,0,14">
+                        <Ellipse.RenderTransform>
+                            <RotateTransform Angle="0"/>
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                                         From="0" To="360"
+                                                         Duration="0:0:0.8"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <TextBlock x:Name="IdleStatusText"
+                               Text="Setting up"
+                               FontSize="22"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <Ellipse x:Name="IdleStatusDot"
+                             Width="1" Height="1"
+                             Visibility="Collapsed"/>
+                    <ProgressBar x:Name="StartupProgress"
+                                 Width="1" Height="1"
+                                 Visibility="Collapsed"/>
+                    <StackPanel x:Name="HotspotHelpPanel" Visibility="Collapsed"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- PAGE 2: pairing / QR -->
+            <Grid x:Name="PairingPanel" Visibility="Collapsed">
+                <StackPanel Width="620" MaxWidth="620" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" Margin="0,0,0,22">
+                        <Border Style="{StaticResource StepPill}" HorizontalAlignment="Center" Padding="10,5" Margin="0,0,0,12">
+                            <TextBlock x:Name="PairingEyebrow" Text="CONNECT" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"/>
+                        </Border>
+                        <TextBlock x:Name="PairingTitle" Text="Scan to open the DirectDrop site" FontSize="27" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock x:Name="PairingSubtitle" Text="Scan the QR code with your phone camera." FontSize="13" Foreground="{StaticResource TextMutedBrush}" Margin="0,7,0,0" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    </StackPanel>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="300"/></Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource CardBorder}" Margin="0,0,8,0" Padding="22">
+                            <StackPanel HorizontalAlignment="Center">
+                                <Border Background="White" CornerRadius="10" Padding="12" HorizontalAlignment="Center">
+                                    <Image x:Name="PairingQrImage" Width="220" Height="220"/>
+                                </Border>
+                                <TextBlock x:Name="PairingPrimaryText" Text="—" FontSize="15" FontWeight="SemiBold" Margin="0,15,0,0" HorizontalAlignment="Center" TextAlignment="Center"/>
+                                <TextBlock x:Name="PairingSecondaryText" Text="" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,5,0,0" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="290"/>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <Border Style="{StaticResource CardBorder}" Padding="17" Margin="0,0,0,10">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="Connection" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                                        <Ellipse x:Name="PairingStatusDot" Width="8" Height="8" Fill="{StaticResource WarningBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="PairingStatusText" Text="Waiting for device" FontSize="13" FontWeight="SemiBold" Margin="8,0,0,0" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="ConnectionDetailsCard" Style="{StaticResource CardBorder}" Padding="17" Margin="0,0,0,10">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock x:Name="ConnectionDetailsTitle" Text="Connection details" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="ConnectionDetailsText" Text="" FontSize="11" FontFamily="Consolas" TextWrapping="Wrap" TextAlignment="Center" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+
+            <!-- PAGE 3: transfers -->
+            <ScrollViewer x:Name="TransferPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <Grid Margin="0,0,0,20">
+                        <StackPanel HorizontalAlignment="Center" Width="620">
+                            <TextBlock Text="Start transferring" FontSize="29" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Send from this PC or pick up files from your phone." FontSize="13" Foreground="{StaticResource TextMutedBrush}" Margin="0,7,0,0" HorizontalAlignment="Center"/>
+                            <Border Background="{StaticResource SuccessSoftBrush}" CornerRadius="8" Padding="9,5" Margin="0,10,0,0" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Ellipse x:Name="ConnectionStatusDot" Width="7" Height="7" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="ConnectionStatusText" Text="Device connected" FontSize="11" Foreground="{StaticResource SuccessBrush}" FontWeight="SemiBold" Margin="7,0,0,0"/>
+                                    <ItemsControl x:Name="DevicesList" Margin="7,0,0,0" Foreground="{StaticResource SuccessBrush}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Button x:Name="StopButton" Content="End session" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Click="StopButton_Click"/>
+                    </Grid>
+
+                    <Border x:Name="HotspotDroppedPanel" Visibility="Collapsed" Background="{StaticResource WarningSoftBrush}" BorderBrush="#514814" BorderThickness="1" CornerRadius="14" Padding="14" Margin="0,0,0,12">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar Width="16" Height="16" IsIndeterminate="True" Style="{StaticResource ThinProgress}" VerticalAlignment="Center"/>
+                                <StackPanel Margin="9,0,0,0">
+                                    <TextBlock Text="Reconnecting to Mobile Hotspot…" FontWeight="SemiBold" Foreground="{StaticResource WarningBrush}"/>
+                                    <TextBlock Text="DirectDrop is retrying automatically." FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="FastModePanel" Visibility="Visible" Background="{StaticResource CardBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="14" Padding="14" Margin="0,0,0,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Fast Mode" FontSize="12" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="FastModeStatusText" Text="Normal Windows settings" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,3,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Internet may not work until app is closed" FontSize="10.5" Foreground="{StaticResource WarningBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <ToggleButton x:Name="FastModeToggle" Style="{StaticResource FastToggleButton}" Click="FastModeToggle_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock x:Name="OtherDeviceBlockedText" Text="Another device tried to connect. DirectDrop allows one active device per session." FontSize="11" Foreground="{StaticResource WarningBrush}" Margin="0,0,0,12" Visibility="Collapsed"/>
+
+                    <!-- Primary PC-to-phone drop target -->
+                    <Border x:Name="DropZoneBorder" Background="#15171B" BorderBrush="#30333A" BorderThickness="1" CornerRadius="20" Padding="24" Margin="0,0,0,12">
+                        <StackPanel HorizontalAlignment="Center">
+                            <Border Width="56" Height="56" CornerRadius="17" Background="{StaticResource AccentSoftBrush}" BorderBrush="#214D7B" BorderThickness="1" Padding="13" HorizontalAlignment="Center">
+                                <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="27" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}"/>
+                            </Border>
+                            <TextBlock Text="Drop files here" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+                            <TextBlock Text="or" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,3,0,4"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button x:Name="AddFilesButton" Style="{StaticResource PrimaryButton}" Padding="19,10" Click="AddFilesButton_Click">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="&#xE898;" FontFamily="Segoe MDL2 Assets" FontSize="15" Margin="0,0,8,0"/>
+                                        <TextBlock Text="Choose files" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="AddFolderButton" Style="{StaticResource SecondaryButton}" Padding="15,10" Margin="8,0,0,0" Click="AddFolderButton_Click">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="15" Margin="0,0,7,0"/>
+                                        <TextBlock Text="Choose folder" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <TextBlock Text="Selected files are sent directly to your connected phone" FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}" Margin="0,0,0,12" Padding="19">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,14">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="Transfers" FontSize="17" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Live progress for files moving between your devices." FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,3,0,0"/>
+                                </StackPanel>
+                                <Button x:Name="OpenTransferFolderButton" Grid.Column="1" Content="&#xE8B7;  Open transfer folder"
+                                        FontFamily="Segoe UI" Style="{StaticResource SecondaryButton}" Padding="13,8"
+                                        Click="OpenTransferFolderButton_Click"/>
+                            </Grid>
+                            <ItemsControl x:Name="TransfersList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,14,0,14">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Border Width="32" Height="32" CornerRadius="10" Background="{StaticResource AccentSoftBrush}" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding FileIcon}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}"/>
+                                                        </Border>
+                                                        <StackPanel VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding FileName}" FontSize="13" FontWeight="SemiBold"/>
+                                                            <TextBlock Text="{Binding DirectionArrow}" Margin="0,2,0,0" FontSize="10" Foreground="{StaticResource TextMutedBrush}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <ProgressBar Value="{Binding PercentComplete}" Minimum="0" Maximum="100" Margin="0,11,0,6" Height="6">
+                                                        <ProgressBar.Style>
+                                                            <Style TargetType="ProgressBar" BasedOn="{StaticResource ThinProgress}">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsBrowserManaged}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ProgressBar.Style>
+                                                    </ProgressBar>
+                                                    <TextBlock Text="{Binding DetailLine}" FontSize="11" Foreground="{StaticResource TextMutedBrush}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsBrowserManaged}" Value="True">
+                                                                        <Setter Property="Foreground" Value="{StaticResource SuccessBrush}"/>
+                                                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                    <Button Content="×" FontSize="20" FontWeight="SemiBold" Style="{StaticResource IconButton}" ToolTip="Cancel transfer" Visibility="{Binding IsCancellable, Converter={StaticResource BooleanToVisibilityConverter}}" CommandParameter="{Binding TransferId}" Click="CancelTransfer_Click"/>
+                                                    <Button Content="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="15" Style="{StaticResource IconButton}" Margin="4,0,0,0" ToolTip="Show in File Explorer" IsEnabled="{Binding IsOpenable}" CommandParameter="{Binding LocalPath}" Click="OpenTransferFile_Click"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock x:Name="NoTransfersText" Text="No transfers yet. Send something from either device and it will appear here." FontSize="12" Foreground="{StaticResource TextMutedBrush}" Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- In-app help surface -->
+        <Grid x:Name="HelpOverlay" Grid.RowSpan="2" Visibility="Collapsed" Panel.ZIndex="900"
+              Background="#B3000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border Width="520" MaxWidth="520" MaxHeight="660" Padding="24"
+                    Background="{StaticResource CardBrush}"
+                    BorderBrush="{StaticResource BorderStrongBrush}" BorderThickness="1"
+                    CornerRadius="18" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="Help" FontSize="22" FontWeight="SemiBold"/>
+                            <TextBlock Text="Quick answers for using DirectDrop." FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" HorizontalAlignment="Right" Content="×" FontSize="20" Style="{StaticResource IconButton}"
+                                ToolTip="Close" Click="CloseHelpButton_Click"/>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" Margin="0,18,0,12" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,4,0">
+                        <ScrollViewer.Resources>
+                            <Style TargetType="ScrollBar">
+                                <Setter Property="Width" Value="8"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ScrollBar">
+                                            <Grid Background="Transparent">
+                                                <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                                    <Track.DecreaseRepeatButton><RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Background="Transparent" BorderThickness="0" IsTabStop="False"/></Track.DecreaseRepeatButton>
+                                                    <Track.Thumb>
+                                                        <Thumb Margin="1,2,1,2" Background="{StaticResource BorderStrongBrush}" BorderThickness="0"/>
+                                                    </Track.Thumb>
+                                                    <Track.IncreaseRepeatButton><RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Background="Transparent" BorderThickness="0" IsTabStop="False"/></Track.IncreaseRepeatButton>
+                                                </Track>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ScrollViewer.Resources>
+                        <StackPanel Margin="0,0,0,2">
+                            <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="1  Connect your phone" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Start DirectDrop, connect your phone to the DirectDrop Wi‑Fi, then scan the QR code." TextWrapping="Wrap"
+                                               FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="2  Phone → PC" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Choose files in the phone browser. They are saved automatically to your configured transfer folder on this PC." TextWrapping="Wrap"
+                                               FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="3  PC → phone" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Drop files or choose files/folders. The connected phone receives them over the local connection." TextWrapping="Wrap"
+                                               FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="4  Large files" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Files over 1 GB use downloads in the phone browser. DirectDrop does not buffer the file in the web page, and no progress bar is shown for these downloads." TextWrapping="Wrap"
+                                               FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardBorder}" Padding="15">
+                                <StackPanel>
+                                    <TextBlock Text="5  Interrupted transfers" FontSize="13" FontWeight="SemiBold"/>
+                                    <TextBlock Text="If the phone page is refreshed during an upload, select the same file again to resume from the saved transfer state." TextWrapping="Wrap"
+                                               FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,6,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <Button Grid.Row="2" Content="Done" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right"
+                            Padding="20,9" Click="CloseHelpButton_Click"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- DirectDrop in-app modal surface. This replaces native MessageBox prompts
+             for consent/optimization flows so the UI matches the app design. -->
+        <Grid x:Name="PromptOverlay" Grid.RowSpan="2" Visibility="Collapsed" Panel.ZIndex="1000"
+              Background="#B3000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border Width="420" MaxWidth="420" Padding="22"
+                    Background="{StaticResource CardBrush}"
+                    BorderBrush="{StaticResource BorderStrongBrush}" BorderThickness="1"
+                    CornerRadius="18" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="42" Height="42" CornerRadius="13"
+                                Background="{StaticResource AccentSoftBrush}"
+                                BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                Margin="0,0,12,0">
+                            <TextBlock x:Name="PromptIconText" Text="✓" FontSize="20"
+                                       Foreground="{StaticResource AccentBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel>
+                            <TextBlock x:Name="PromptTitle" Text="DirectDrop" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="PromptSubtitle" Text="" FontSize="10" Foreground="{StaticResource TextMutedBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock x:Name="PromptBody" TextWrapping="Wrap" FontSize="12.5"
+                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,18,0,0"/>
+                    <CheckBox x:Name="PromptRememberCheck" Content="Remember my choice"
+                              Foreground="{StaticResource TextSecondaryBrush}" Margin="0,16,0,0"
+                              Visibility="Collapsed"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                        <Button x:Name="PromptSecondaryButton" Content="Not now" Style="{StaticResource SecondaryButton}"
+                                Margin="0,0,8,0" Click="PromptSecondaryButton_Click"/>
+                        <Button x:Name="PromptPrimaryButton" Content="Continue" Foreground="Black" Style="{StaticResource SuccessPrimaryButton}"
+                                Click="PromptPrimaryButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,11 @@
+How to install:
+1. Follow step 1 and install the .NET8 sdk from the folder or download from official site. (ignore if already installed)
+2. Open step 2 folder and run "Install DirectDrop.bat"
+
+How to use:
+1) Open DirectDrop in your PC.
+2) Allow permissions as asked.
+3) Connect to the Wi-Fi network by scanning the qr code from your android/iPhone/other device.
+4) Again scan qr code from your android/iPhone/other device to open a link in your browser from where you can transfer files.
+
+Enjoy! 

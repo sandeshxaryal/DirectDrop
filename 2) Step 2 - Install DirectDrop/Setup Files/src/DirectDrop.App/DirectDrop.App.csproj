@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!--
+      The "10.0.19041.0" suffix is what gives this project direct access to
+      WinRT types (Windows.Networking.NetworkOperatorTetheringManager, used
+      by HotspotService) without any extra NuGet package - the .NET SDK
+      generates the CsWinRT projection automatically for any TargetFramework
+      that names a Windows SDK version. 19041 = Windows 10 2004, comfortably
+      below Windows 11's baseline, and NetworkOperatorTetheringManager has
+      existed since much earlier (Windows 10 1607), so this is a floor for
+      *build-time* API surface, not a runtime restriction.
+    -->
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>DirectDrop.App</RootNamespace>
+    <AssemblyName>DirectDrop</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\DirectDrop.ico</ApplicationIcon>
+    <!-- DirectDrop brand icon used by the Windows executable and shortcuts. -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <!--
+      InvariantGlobalization is deliberately NOT set to true here (unlike
+      DirectDrop.Core/Server, where it would be safe). WPF's text/font
+      rendering pipeline - specifically its font-fallback and language
+      handling in MS.Internal.FontCache - genuinely needs real culture
+      data. Setting InvariantGlobalization=true strips that out and causes
+      the app to crash on startup with "The type initializer for
+      'MS.Internal.FontCache.MajorLanguages' threw an exception" - a real
+      error hit while building this project, not a hypothetical one.
+    -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\DirectDrop.png" />
+    <Content Include="Assets\DirectDrop.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Pure C#, MIT-licensed, zero further dependencies - generates the QR
+         code as a PNG byte array that we hand straight to a WPF BitmapImage. -->
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DirectDrop.Core\DirectDrop.Core.csproj" />
+    <ProjectReference Include="..\DirectDrop.Server\DirectDrop.Server.csproj" />
+  </ItemGroup>
+
+  <!--
+    wwwroot lives physically in DirectDrop.Server (see that project's
+    csproj); its CopyToOutputDirectory Content items flow transitively into
+    this project's output folder via the ProjectReference above, so
+    DirectDrop.exe ships with wwwroot alongside it with no duplication.
+  -->
+
+</Project>

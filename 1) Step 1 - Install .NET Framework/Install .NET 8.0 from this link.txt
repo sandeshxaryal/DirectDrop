@@ -1,0 +1,2 @@
+Install .NET 8.0 from this official site link:
+https://dotnet.microsoft.com/en-us/download/dotnet/8.0

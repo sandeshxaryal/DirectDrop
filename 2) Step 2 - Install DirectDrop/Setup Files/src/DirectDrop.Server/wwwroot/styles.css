@@ -1,0 +1,135 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f5f5f7;
+  --card: rgba(255,255,255,.92);
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --subtle: #86868b;
+  --accent: #0071e3;
+  --green: #248a3d;
+  --red: #d70015;
+  --border: rgba(60,60,67,.16);
+  --soft: rgba(118,118,128,.12);
+  --progress-bg: #e6e6eb;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101012;
+    --card: rgba(30,30,32,.94);
+    --text: #f5f5f7;
+    --muted: #a1a1a6;
+    --subtle: #8e8e93;
+    --accent: #2997ff;
+    --green: #30d158;
+    --red: #ff453a;
+    --border: rgba(142,142,147,.24);
+    --soft: rgba(118,118,128,.18);
+    --progress-bg: #2c2c2e;
+  }
+}
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--bg); }
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+button, label { font: inherit; }
+button { touch-action: manipulation; }
+.page { width: min(680px, 100%); margin: 0 auto; padding: calc(env(safe-area-inset-top, 0px) + 20px) 16px calc(env(safe-area-inset-bottom, 0px) + 24px); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 2px 2px 18px; }
+.brand { display: flex; align-items: center; min-width: 0; gap: 11px; }
+.brandLogo { width: 42px; height: 42px; display: block; object-fit: contain; border-radius: 8px; flex: 0 0 42px; }
+.brandCopy { min-width: 0; }
+.brandCopy h1 { margin: 0; font-size: 20px; line-height: 1.1; letter-spacing: -.025em; font-weight: 700; }
+.brandCopy p { margin: 3px 0 0; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.connectionStatus { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: var(--subtle); }
+.dot--pending { background: #b88600; }
+.dot--connected { background: var(--green); }
+.dot--error { background: var(--red); }
+.connectionCard { display: grid; grid-template-columns: minmax(0,1fr) 32px minmax(0,1fr); align-items: center; gap: 6px; padding: 12px; margin-bottom: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.device { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.device--right { justify-content: flex-end; text-align: right; }
+.deviceIcon { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 9px; background: var(--soft); color: var(--accent); }
+.deviceIcon--pc { color: var(--green); }
+.deviceIcon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.deviceText { min-width: 0; }
+.deviceText strong, .deviceText small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.deviceText strong { font-size: 12px; font-weight: 650; }
+.deviceText small { margin-top: 2px; color: var(--muted); font-size: 10px; }
+.connectionArrow { color: var(--subtle); text-align: center; font-size: 17px; }
+.sendSection { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 4px 2px 18px; }
+.sendSection h2 { margin: 0; font-size: 21px; line-height: 1.15; letter-spacing: -.025em; }
+.sendSection p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+.sendButton { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 15px; border: 0; border-radius: var(--radius); background: var(--accent); color: #fff; font-size: 13px; font-weight: 650; cursor: pointer; flex: 0 0 auto; }
+.sendButton svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.transferCard { padding: 14px; }
+.transferHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 11px; border-bottom: 1px solid var(--border); }
+.transferHeader h2 { margin: 0; font-size: 17px; letter-spacing: -.02em; }
+.transferHeader p { margin: 4px 0 0; color: var(--muted); font-size: 10px; line-height: 1.35; }
+.transferActions { display: flex; gap: 7px; flex: 0 0 auto; }
+.secondaryButton { min-height: 34px; padding: 0 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--soft); color: var(--text); font-size: 11px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.secondaryButton--danger { color: var(--red); }
+.secondaryButton:disabled { opacity: .4; cursor: default; }
+.transferList { list-style: none; margin: 0; padding: 0; }
+.transferRow { padding: 13px 0; border-bottom: 1px solid var(--border); transition: opacity .2s ease, transform .2s ease, max-height .2s ease; }
+.transferRow:last-child { border-bottom: 0; }
+.transferRow--removing { opacity: 0; transform: translateY(-3px); max-height: 0; padding-top: 0; padding-bottom: 0; overflow: hidden; border: 0; }
+.transferTop { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.name { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13px; font-weight: 600; }
+.name > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fileIcon { width: 28px; height: 28px; flex: 0 0 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; background: var(--soft); color: var(--accent); }
+.fileIcon svg { width: 15px; height: 15px; }
+.transferTopRight { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
+.state { color: var(--muted); font-size: 10px; white-space: nowrap; }
+.cancelArea { display: flex; align-items: center; }
+.cancelButton { width: 27px; height: 27px; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--red); font-size: 17px; line-height: 1; cursor: pointer; }
+.cancelButton:disabled { opacity: .4; }
+.progressTrack { height: 7px; margin-top: 9px; overflow: hidden; background: var(--progress-bg); border-radius: 2px; }
+.progressFill { height: 100%; width: 0; border-radius: 3px; background: var(--accent); transition: width .15s ease; }
+.progressFill.done { background: var(--green); }
+.progressFill.error { background: var(--red); }
+.transferMeta { display: flex; justify-content: space-between; gap: 10px; margin-top: 6px; color: var(--muted); font-size: 10px; }
+.saveArea { margin-top: 9px; }
+.saveButton { min-height: 32px; padding: 0 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--soft); color: var(--text); font-size: 11px; font-weight: 600; cursor: pointer; }
+.saveButton:disabled { opacity: .45; }
+.retryButton { min-height: 32px; padding: 0 10px; border: 1px solid var(--border); border-radius: 9px; background: var(--soft); color: var(--text); font-size: 11px; font-weight: 600; cursor: pointer; }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 27px 10px 22px; text-align: center; color: var(--muted); }
+.empty strong { color: var(--text); font-size: 12px; }
+.empty span { font-size: 10px; }
+footer { margin-top: 13px; text-align: center; color: var(--subtle); font-size: 10px; }
+@media (max-width: 520px) {
+  .page { padding-left: 13px; padding-right: 13px; }
+  .header { padding-bottom: 14px; }
+  .connectionStatus { font-size: 10px; }
+  .sendSection { align-items: flex-end; }
+  .sendSection h2 { font-size: 19px; }
+  .transferHeader { align-items: stretch; flex-direction: column; }
+  .transferActions { width: 100%; }
+  .secondaryButton { flex: 1; }
+}
+@media (max-width: 370px) {
+  .brandLogo { width: 38px; height: 38px; flex-basis: 38px; }
+  .brandCopy h1 { font-size: 18px; }
+  .connectionCard { grid-template-columns: minmax(0,1fr) 24px minmax(0,1fr); padding: 10px; }
+  .deviceIcon { width: 30px; height: 30px; flex-basis: 30px; }
+  .deviceText strong { font-size: 11px; }
+  .deviceText small { font-size: 9px; }
+  .sendSection { gap: 8px; }
+  .sendButton { padding: 0 11px; }
+  .state { display: none; }
+}
+
+.reloadNotice { margin: 0 0 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--soft); color: var(--muted); font-size: 11px; }
+
+/* Browser-managed large downloads intentionally have no page progress bar. */
+.transferRow--browserDownload .progressTrack { display: none; }
+.transferRow--browserDownload .transferMeta { margin-top: 7px; }
+.transferRow--browserDownload .state { color: var(--accent); font-weight: 650; }

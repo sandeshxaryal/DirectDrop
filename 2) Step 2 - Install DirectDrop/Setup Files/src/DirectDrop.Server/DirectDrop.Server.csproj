@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>DirectDrop.Server</RootNamespace>
+    <!--
+      Plain Microsoft.NET.Sdk (a class library), not Microsoft.NET.Sdk.Web,
+      because this project is a library consumed by DirectDrop.App - it has
+      no entry point of its own. The explicit FrameworkReference below is
+      what Microsoft.NET.Sdk.Web would normally add implicitly; adding it by
+      hand here gets us Kestrel/minimal APIs without the "this must be an
+      executable" assumption.
+
+      Everything in this project is pure ASP.NET Core with no Windows-only
+      dependency, so it builds and runs identically on Windows, Linux, and
+      macOS. That's what makes it possible to unit test - and to exercise
+      with real HTTP requests - without a Windows machine. Only
+      DirectDrop.App (the WPF shell, hotspot control, and firewall rules) is
+      Windows-only.
+    -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DirectDrop.Core\DirectDrop.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

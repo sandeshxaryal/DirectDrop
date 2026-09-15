@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>DirectDrop.Core</RootNamespace>
+    <!--
+      Deliberately has zero NuGet package references. Everything in this project
+      is pure .NET BCL logic: path safety, token comparison, filename handling,
+      and the in-memory session/transfer model. Keeping it dependency-free means
+      it is trivial to unit test on any machine (Windows, Linux, macOS, CI)
+      without pulling in ASP.NET Core, WPF, or WinRT.
+    -->
+  </PropertyGroup>
+
+</Project>

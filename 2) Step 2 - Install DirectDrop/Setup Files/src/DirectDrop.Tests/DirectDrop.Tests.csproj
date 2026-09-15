@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <!--
+      Deliberately net8.0, not net8.0-windows: these tests exercise
+      DirectDrop.Core and DirectDrop.Server only, both of which are
+      cross-platform. That means this test project - unlike DirectDrop.App -
+      runs fine in a Linux/macOS CI job, not just on a Windows dev box.
+      The WPF UI, hotspot control, and firewall rules in DirectDrop.App are
+      Windows-only and are covered by the manual Test A-I checklist in the
+      README instead, since they genuinely need a real Windows machine
+      (and, for the hotspot/firewall pieces, an iPhone) to mean anything.
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DirectDrop.Core\DirectDrop.Core.csproj" />
+    <ProjectReference Include="..\DirectDrop.Server\DirectDrop.Server.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="icon" type="image/png" sizes="256x256" href="/assets/directdrop-logo.png?v=20260914-8" />
+  <link rel="apple-touch-icon" href="/assets/directdrop-logo.png?v=20260914-8" />
+  <title>DirectDrop site</title>
+  <link rel="stylesheet" href="/styles.css?v=20260914-8" />
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="brand">
+        <img class="brandLogo" src="/assets/directdrop-logo.png?v=20260914-8" alt="DirectDrop" />
+        <div class="brandCopy">
+          <h1>DirectDrop</h1>
+          <p id="pcName">Connecting…</p>
+        </div>
+      </div>
+      <div class="connectionStatus" aria-live="polite">
+        <span id="statusDot" class="dot dot--pending"></span>
+        <span id="statusText">Connecting…</span>
+      </div>
+    </header>
+
+    <section class="connectionCard" aria-label="Connected devices">
+      <div class="device">
+        <span class="deviceIcon deviceIcon--phone" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.4"/><path d="M10 5h4M11 18.5h2"/></svg></span>
+        <span class="deviceText"><strong>This phone</strong><small>Send & receive</small></span>
+      </div>
+      <span class="connectionArrow" aria-hidden="true">→</span>
+      <div class="device device--right">
+        <span class="deviceIcon deviceIcon--pc" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+        <span class="deviceText"><strong id="pcNameSecondary">This PC</strong><small>DirectDrop</small></span>
+      </div>
+    </section>
+
+    <section class="sendSection">
+      <div>
+        <h2>Send files to the PC</h2>
+        <p>Files stay on your local connection.</p>
+      </div>
+      <label class="sendButton" for="filePicker">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7.5 8.5 12 4l4.5 4.5M5 15v4h14v-4"/></svg>
+        <span>Select files</span>
+      </label>
+      <input id="filePicker" type="file" multiple accept="image/*,video/*,audio/*,.pdf,.zip,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx" hidden />
+    </section>
+
+    <div id="reloadNotice" class="reloadNotice" hidden role="status"></div>
+
+    <section class="card transferCard" aria-label="Transfers">
+      <div class="transferHeader">
+        <div>
+          <h2>Transfers</h2>
+          <p>Files currently moving between your phone and PC.</p>
+        </div>
+        <div class="transferActions">
+          <button id="cancelAllButton" class="secondaryButton secondaryButton--danger" type="button" disabled>Cancel all</button>
+          <button id="downloadAllButton" class="secondaryButton" type="button" disabled>Save all</button>
+        </div>
+      </div>
+
+      <ul id="transferList" class="transferList"></ul>
+      <div id="emptyState" class="empty">
+        <strong>No transfers yet</strong>
+        <span>Files sent from either device will appear here.</span>
+      </div>
+    </section>
+
+    <footer>Local connection · No cloud upload</footer>
+  </main>
+  <script src="/app.js?v=20260914-12"></script>
+</body>
+</html>
