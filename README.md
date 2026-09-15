@@ -10,7 +10,7 @@ Looking for a **Windows AirDrop alternative**, **Android file transfer to PC**, 
 
 ## Download DirectDrop
 
-**1. Click the green `Code` dropdown button above.**
+**1. Click the green `Code` dropdown button above.** Or [Click this to download](https://github.com/sandeshxaryal/DirectDrop/archive/refs/heads/main.zip)
 
 **2. Select `Download ZIP`.**
 
