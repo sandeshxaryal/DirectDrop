@@ -1,6 +1,6 @@
 # DirectDrop — Fast, Simple & Open-Source File Transfer
 
-**DirectDrop** is a fast, lightweight, ad-free, open-source **file transfer application for Windows PC and mobile devices**. Transfer files directly between your Windows computer and Android, iPhone, or other devices over a local network.
+**DirectDrop** is a fast, lightweight, ad-free, open-source **file transfer application for Windows PC and mobile (android/IOS) and other devices that support browser**. Transfer files directly between your Windows computer and Android, iPhone, or other devices over a local network.
 
 Looking for a **Windows AirDrop alternative**, **Android file transfer to PC**, **PC to phone file transfer**, **wireless file sharing**, or a simple **local network file transfer tool**? DirectDrop is built for that.
 
@@ -10,15 +10,15 @@ Looking for a **Windows AirDrop alternative**, **Android file transfer to PC**, 
 
 ## Download DirectDrop
 
-**1. [Click this to download ZIP file](https://github.com/sandeshxaryal/DirectDrop/archive/refs/heads/main.zip)
+[Click this to download Installation ZIP file](https://github.com/sandeshxaryal/DirectDrop/archive/refs/heads/main.zip)
 
-**2. Extract the downloaded ZIP file.**
+**1. Extract the downloaded ZIP file.**
 
-**3. Open the extracted DirectDrop setup folder.**
+**2. Open the extracted DirectDrop setup folder.**
 
-**4. Install .NET 8.0 if you have not installed already**
+**3. Install .NET 8.0 if you have not installed already**
 
-**5. Run "Install DirectDrop.bat" file inside Step 2 folder**
+**4. Run "Install DirectDrop.bat" file inside Step 2 folder. You can now use DirectDrop**
 
 
 
