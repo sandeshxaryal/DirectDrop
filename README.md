@@ -10,36 +10,17 @@ Looking for a **Windows AirDrop alternative**, **Android file transfer to PC**, 
 
 ## Download DirectDrop
 
-**1. Click the green `Code` dropdown button above.** Or [Click this to download](https://github.com/sandeshxaryal/DirectDrop/archive/refs/heads/main.zip)
+**1. [Click this to download ZIP file](https://github.com/sandeshxaryal/DirectDrop/archive/refs/heads/main.zip)
 
-**2. Select `Download ZIP`.**
+**2. Extract the downloaded ZIP file.**
 
-**3. Extract the downloaded ZIP file.**
+**3. Open the extracted DirectDrop setup folder.**
 
-**4. Open the extracted DirectDrop setup folder.**
+**4. Install .NET 8.0 if you have not installed already**
 
-**5. Follow the installation instructions in:**
+**5. Run "Install DirectDrop.bat" file inside Step 2 folder**
 
-```text
-GUIDE- Installation and How to Use.txt
-```
 
-The guide contains the complete installation and usage instructions.
-
-### Quick Installation
-
-1. Follow **Step 1** and install the **.NET 8 SDK** from the included folder, or download the .NET 8 SDK from the official Microsoft website.  
-   **Ignore this step if .NET 8 SDK is already installed.**
-
-2. Open the **Step 2** folder and run:
-
-```text
-Install DirectDrop.bat
-```
-
-The installer installs DirectDrop to the Windows system drive and keeps the extracted setup package separate.
-
----
 
 # 📱 How to Use DirectDrop
 
